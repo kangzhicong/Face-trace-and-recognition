@@ -1,0 +1,110 @@
+import serial
+
+serialPort = "COM8"  # 串口
+baudRate = 9600  # 波特率
+ser = serial.Serial(serialPort, baudRate, timeout=0.5)
+print("参数设置：串口=%s ，波特率=%d" % (serialPort, baudRate))
+
+demo1=b"0"
+demo2=b"1"
+while 1:
+    c=input('请输入指令:')
+    c=ord(c)#将c转换为UTF-8标准数字
+    if(c==48):
+        ser.write(demo1)#ser.write在于向串口中写入数据
+    if(c==49):
+        ser.write(demo2)
+
+
+
+
+from hyperlpr import pipline as pp
+
+import cv2
+
+image =cv2.imread("./car/test2.png")
+image,res = pp.SimpleRecognizePlate(image)
+print(res)
+
+#file=open('1.txt',mode='w+')
+#file.write(str(res))
+#file.close()
+
+import serial #导入模块
+try:
+  portx="COM6"
+  bps=9600
+  #超时设置,None：永远等待操作，0为立即返回请求结果，其他值为等待超时时间(单位为秒）
+  timex=None
+  ser=serial.Serial(portx,bps,timeout=0)
+  print("串口详情参数：", ser)
+
+  #十六进制的发送
+  result=ser.write(chr(0x06).encode("utf-8"))#写数据
+  print("写总字节数:",result)
+
+  #十六进制的读取
+  print(ser.read().hex())#读一个字节
+
+  print("---------------")
+  ser.close()#关闭串口
+
+except Exception as e:
+    print("---异常---：",e)
+
+
+import cv2
+import numpy as np
+
+cap = cv2.VideoCapture(0)
+cap.set(3,640)
+cap.set(4,480)
+
+test="test"
+
+ret, frame = cap.read()
+rows, cols, channels = frame.shape
+print(cols, rows, channels)
+
+while(1):
+    success,img=cap.read()
+    cv2.imshow("video",img)
+    k=cv2.waitKey(1) & 0xFF
+    if (k==ord('q')):
+            break
+    elif(k == ord('s')):
+        cv2.imwrite("./image/"+ str(test) + ".jpg",img)
+        print("success to save"+ str(test) +".jpg")
+
+cap.release()
+cv2.destroyAllWindows()
+
+
+
+import matplotlib.pyplot as plt
+import serial
+import cv2
+
+serialPort = "COM8"  # 串口
+baudRate = 9600  # 波特率
+ser = serial.Serial(serialPort, baudRate, timeout=1)
+print("参数设置：串口=%s ，波特率=%d" % (serialPort, baudRate))
+
+while (1):
+    str1 = ser.readline()
+    str1 = str(str1)
+    b = str1.lstrip("b'")
+    b = b.lstrip("Distance:")
+    b = b.rstrip(",")
+    b = b.rstrip("'")
+    b = b.replace('\\n', '').replace('\\r', '')
+    b = b.lstrip()
+    b = b.replace('cm', '')
+    b = b.lstrip()
+    print(b)
+    if b == "":
+        b = 0
+    else:
+        b = float(b)
+print(b)
+
